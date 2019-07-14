@@ -1,0 +1,11 @@
+package inh;
+
+public class Main {
+
+	public static void main(String[] args) 
+	{
+		Rectangle r1 = new Rectangle("BLUE", true, 10,5);
+		System.out.println(r1.toString());
+	}
+
+}

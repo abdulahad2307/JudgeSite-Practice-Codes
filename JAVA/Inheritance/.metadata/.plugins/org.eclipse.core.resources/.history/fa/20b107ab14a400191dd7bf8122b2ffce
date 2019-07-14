@@ -1,0 +1,55 @@
+package task;
+
+public class RegularTutor extends Tutor
+{
+	private double baseSalary;
+	private double conveyances;
+	private double deduction;
+	
+	public RegularTutor(String name, String address, int age,double base, double con,double ded) 
+	{
+		super(name, address, age);
+		this.baseSalary = base;
+		this.conveyances = con;
+		this.deduction = ded;
+	}
+
+	public double getBaseSalary() {
+		return baseSalary;
+	}
+
+	public void setBaseSalary(double baseSalary) {
+		this.baseSalary = baseSalary;
+	}
+
+	public double getConveyances() {
+		return conveyances;
+	}
+
+	public void setConveyances(double conveyances) {
+		this.conveyances = conveyances;
+	}
+
+	public double getDeduction() {
+		return deduction;
+	}
+
+	public void setDeduction(double deduction) {
+		this.deduction = deduction;
+	}
+	
+	public double computeYearlySalary()
+	{
+		return (baseSalary+conveyances - deduction) * 12;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "[baseSalary=" + baseSalary + ", conveyances=" + conveyances + ", deduction=" + deduction
+				+ ", computeYearlySalary()=" + computeYearlySalary() + "]";
+	}
+	
+	
+	
+	
+}
