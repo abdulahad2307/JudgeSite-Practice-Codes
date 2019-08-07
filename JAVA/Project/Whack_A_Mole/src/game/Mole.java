@@ -35,7 +35,6 @@ public class Mole extends JButton
 			isAlive = true;
 			//ImageIcon mole = new ImageIcon("Images//mole1.png");
 			Icon img = new ImageIcon("Images//molef.jpg");
-			//this.setBackground(Color.GREEN);
 			this.setIcon(img);
 		}
 	}
@@ -43,11 +42,10 @@ public class Mole extends JButton
 	public void kill() 
 	{
 		isAlive = false;
-		//this.setBackground(Color.RED);
 		Icon img1 = new ImageIcon("Images//BG.jpg");
 		this.setIcon(img1);
 		life_count = 0; 
-		Game.creaturesAlive--; 
+		GamePlay.molesAlive--; 
 	}
 	
 	//Updates Mole's Status
@@ -56,8 +54,6 @@ public class Mole extends JButton
 		if(isAlive) 
 		{
 			life_count++; 
-			
-			//if life_count is equal to max_life kill the mole 
 			if(life_count == final_life) 
 				this.kill();
 		}
