@@ -4,19 +4,43 @@ Created on Tue Aug 20 00:15:11 2019
 
 @author: AHAD
 """
-def insertionSort(to_sort):
+
+def insertionSort(lists):
 	i=0
-	while i <= len(to_sort)-1:
+	while i <= len(lists)-1:
 		blank = i;
-		item = to_sort[i]
-		while blank > 0 and to_sort[blank-1]  > item:
-			to_sort[blank] = to_sort[blank-1]
+		item = lists[i]
+		while blank > 0 and lists[blank-1]  > item:
+			lists[blank] = lists[blank-1]
 			blank-=1
-		to_sort[blank] = item
+		lists[blank] = item
 		i+=1
-	return to_sort
+	return lists
 
+def mergeSort(arr, n):
+    if n == 1: return arr
+    len_half = int(n/2)
+    return merge(mergeSort(arr[:len_half], len_half),
+            mergeSort(arr[len_half:], n - len_half), n)
 
+def merge(arr1, arr2, n):
+    result = []
+    i,j = 0,0
+    for x in range(n):
+        if len(arr1) <= i:
+            result.extend(arr2[j:])
+            return result
+        elif len(arr2) <= j:
+            result.extend(arr1[i:])
+            return result
+        elif arr1[i] < arr2[j]:
+            result.append(arr1[i])
+            i += 1
+        elif arr2[j] < arr1[i]:
+            result.append(arr2[j])
+            j += 1
+    #print(result)
+    return result
 
 
 def main():
@@ -28,10 +52,10 @@ def main():
     
     if value == '1':
         print("Insertion Sort")
-        insertionSort(list)
-        print(list)    
+        print(insertionSort(list))
     elif value == '2':
         print("Merge Sort")
+        print(mergeSort(list,len(list)))
     elif value == '3':
         print("Randomized Quick Sort")
     elif value == '4':
