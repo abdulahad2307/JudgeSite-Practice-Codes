@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*; 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
@@ -14,12 +15,13 @@ public class GamePlay extends JFrame implements ActionListener
 	private static final int MAX_MOLES = 4; // max number of active moles 
 	private static final double LENGTH_OF_GAME = .25*60000; // game length in milliseconds
 	private static final int TARGET_SCORE = 130; //Maximum Target
-	private static final int MAX_LEVEL = 4; // Max Level
+	private static final int MAX_LEVEL = 2; // Max Level
 	private static final int MOLE_PER_LEVEL = 6; // Moles per level  
 	private static Random rand = new Random(); 
 	private static  int numOfMoles = 6;  
 	private static int level = 1; //counts the level 
-	static int score; 
+	static int score;
+	static int finalScore;
 	static JLabel scoreLabel; //displays the score of the game
 	static JLabel timeLabel; //displays the time left in the game
 	public static int molesAlive; //stores the number of creatures that are currently alive
@@ -32,6 +34,30 @@ public class GamePlay extends JFrame implements ActionListener
 		String welcome = readFileAsString("Welcome.txt");
 		JOptionPane.showMessageDialog(this_game, welcome);
 		
+		LeaderBoard[] lb = new LeaderBoard[5];
+		
+		int count = 0;
+		
+		File file = new File("LeaderBoard.txt");
+		
+		try(
+			Scanner input = new Scanner(file);
+		) {
+			while(input.hasNext()) {
+				String name = input.next();
+				int totalscore = input.nextInt();
+	
+				lb[count] = new LeaderBoard(name,totalscore);
+				System.out.println(lb[count].toString());
+				count++;
+			}
+		}
+		
+		//Arrays.sort(lb);
+		
+		for (int i = 0; i <lb.length; i++) {
+			   System.out.println(lb[i]);
+		}
 		
 		//loop to play the continuously
 		while(true) {
@@ -41,9 +67,10 @@ public class GamePlay extends JFrame implements ActionListener
 				JOptionPane.showMessageDialog(this_game, "Level " + level + "\n Number of Moles: " + numOfMoles + "\n Press OK to begin level.");
 				
 				this_game.playGame(); // Play 
-				 
+				
+				finalScore = finalScore+score;
 				if(score < TARGET_SCORE) {
-					JOptionPane.showMessageDialog(this_game, "Level " + level + " Score: " + score + "\n Did not get to " + TARGET_SCORE + " points.  Game Over");
+					JOptionPane.showMessageDialog(this_game, "Level " + level + " Score: " + score + "\n Did not get to " + TARGET_SCORE + " points.  Game Over\n" + "Total Score" + finalScore);
 					break; 
 					}
 			
@@ -58,7 +85,35 @@ public class GamePlay extends JFrame implements ActionListener
 			}
 			
 			if(level > MAX_LEVEL)
-				JOptionPane.showMessageDialog(this_game, "Congratulations, you have won the game!");
+			{
+				int lowestIndex = lb.length - 1;
+				int lowestHScore = lb[lowestIndex].getTotalscore();
+				System.out.println(lowestHScore);
+				if (finalScore > lowestHScore)
+				{
+					JOptionPane.showMessageDialog(this_game, "Congratulations, you have won the game!\n" + "Total Score:" + finalScore);
+					String newhName = JOptionPane.showInputDialog("Input Your Name");
+					
+					PrintWriter output = new PrintWriter(file);
+					lb[lowestIndex].setTotalscore(finalScore);
+					lb[lowestIndex].setName(newhName);
+					
+					Arrays.sort(lb,Comparator.comparing(LeaderBoard::getTotalscore).reversed());
+					for (int i = 0 ; i < lb.length ; i++)
+					{
+							output.println(lb[i].toString());
+					}
+					
+					output.close();
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(this_game, "Congratulations, you have won the game!\n" + "Total Score:" + finalScore+"\n" + "But Not beaten High Score!!! :-( :-( :-(");
+				}
+				
+				
+			}
+				
 			 
 			int response = JOptionPane.showConfirmDialog(this_game, "Thank you for playing!\n Do you want to play again?", "Play Again?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			
@@ -240,6 +295,8 @@ public class GamePlay extends JFrame implements ActionListener
 	    String data = ""; 
 	    data = new String(Files.readAllBytes(Paths.get(fileName))); 
 	    return data; 
-	} 
+	}
+	
+	
 
 }
